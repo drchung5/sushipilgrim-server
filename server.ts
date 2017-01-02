@@ -1,4 +1,4 @@
-// server.js
+// server.ts
 
 // BASE SETUP
 // =============================================================================
@@ -20,8 +20,6 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-var port = process.env.PORT || LISTEN_PORT        // set our port
-
 // SETUP DOCUMENT_ROOT FOR ANGULAR APP
 // =============================================================================
 app.use(express.static(path.join( __dirname, DOCUMENT_ROOT)));
@@ -32,9 +30,17 @@ app.use(express.static(path.join( __dirname, DOCUMENT_ROOT)));
 var router = express.Router();              // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:9000/api)
-router.get('/', function(req, res) {
-  res.json({ message: 'hooray! welcome to our api!' });
-});
+router.get('/',
+  (req, res) => res.json({ message: 'hooray! welcome to our api!' })
+)
+
+router.get('/reviews',
+  (req, res) => res.json({ message: `All Reviews`})
+)
+
+router.get('/reviews/:state',
+  (req, res) => res.json({ message: `Reviews: ${req.params.state}`})
+)
 
 // more routes for our API will happen here
 
@@ -47,12 +53,13 @@ app.use(API_PATH, router);
 // =============================================================================
 // all requests not otherwise handled should go to 'index.html' to allow
 // bookmarking and manual URLs for Angular single page app
-app.all('/*', function( req, res ){
-  res.sendFile( path.join(__dirname,DOCUMENT_ROOT,INDEX_HTML) )
-})
+app.all('/*',
+  ( req, res ) => res.sendFile( path.join(__dirname,DOCUMENT_ROOT,INDEX_HTML) )
+)
 
 
 // START THE SERVER
 // =============================================================================
+var port = process.env.PORT || LISTEN_PORT
 app.listen(port);
-console.log(`Server listening on port ${LISTEN_PORT}`);
+console.log(`Server listening on port ${port}`);
