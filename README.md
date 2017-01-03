@@ -97,7 +97,7 @@ This is the JSON structure for reviews used in this API
 
 {
   id: 1001,
-  reviewDate: [date], // still working on date format :)
+  reviewDate: "2004-05-16T02:31:03.078Z",
   name: 'Sushi House',
   street: '100 Main St',
   city: 'Cedar Falls',
