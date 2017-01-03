@@ -23,7 +23,9 @@ for a complete MEAN stack implementation.
 
 ##### Get All Reviews*
 
-```http://host:port/api/reviews?count=[2]&page=[0]```
+```
+http://host:port/api/reviews?count=[2]&page=[0]
+```
 
 This function returns all reviews. The number of reviews 
 can be limited by the _count_ parameter. The _page_ 
