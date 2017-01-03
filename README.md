@@ -79,14 +79,14 @@ If no matching review is found it returns HTTP Status code 404
 
 ### Get States with Reviews
 ```javascript
-http://host:port/api/reviews/states
+http://host:port/api/statesWithReviews
 ```
 
 This function returns an array of states with reviews or 
 HTTP Status code 404 if no states have reviews
 
 ```javascript
-{states: ['AL','MN','NC']}
+['AL','MN','NC']
 ```
 
 ### *Review JSONstructure
