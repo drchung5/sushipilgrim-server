@@ -21,7 +21,7 @@ for a complete MEAN stack implementation.
 
 # API
 
-##### Get All Reviews*
+### Get All Reviews*
 
 ```
 http://host:port/api/reviews?count=[2]&page=[0]
@@ -55,7 +55,7 @@ If no matching reviews are found it returns HTTP Status code 404
 }
 ```
 
-##### Get Reviews by State*
+### Get Reviews by State*
 ```javascript
 http://host:port/api/reviews/[state]?count=[count]&page=[page]
 ```
@@ -68,7 +68,7 @@ by state. The State must be specified as a 2 character postal abbreviation.
 The rest of the function is like _Get All Reviews_
 
 
-##### Get a Review*
+### Get a Review*
 ```javascript
 http://host:port/api/reviews?id=[id]
 ```
@@ -77,7 +77,7 @@ This function returns a review by its unique id.
 If no matching review is found it returns HTTP Status code 404
 
 
-##### Get States with Reviews
+### Get States with Reviews
 ```javascript
 http://host:port/api/reviews/states
 ```
@@ -89,7 +89,7 @@ HTTP Status code 404 if no states have reviews
 {states: ['AL','MN','NC']}
 ```
 
-##### *Review JSONstructure
+### *Review JSONstructure
 
 This is the JSON structure for reviews used in this API
 
