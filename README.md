@@ -56,7 +56,9 @@ If no matching reviews are found it returns HTTP Status code 404
 ```
 
 ##### Get Reviews by State*
-```http://host:port/api/reviews/[state]?count=[count]&page=[page]```
+```javascript
+http://host:port/api/reviews/[state]?count=[count]&page=[page]
+```
 
 This function is like _Get All Reviews_ it returns _all_ reviews filtered
 by state. The State must be specified as a 2 character postal abbreviation.
@@ -67,14 +69,18 @@ The rest of the function is like _Get All Reviews_
 
 
 ##### Get a Review*
-```http://host:port/api/reviews?id=[id]```
+```javascript
+http://host:port/api/reviews?id=[id]
+```
 
 This function returns a review by its unique id. 
 If no matching review is found it returns HTTP Status code 404
 
 
 ##### Get States with Reviews
-```http://host:port/api/reviews/states```
+```javascript
+http://host:port/api/reviews/states
+```
 
 This function returns an array of states with reviews or 
 HTTP Status code 404 if no states have reviews
