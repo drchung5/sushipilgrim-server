@@ -39,7 +39,11 @@ router.get('/reviews',
 )
 
 router.get('/reviews/:state',
-  (req, res) => res.json({ message: `Reviews: ${req.params.state}`})
+  (req, res) => res.json({ message: `Reviews: ${req.params.state} : ${req.query.count}`})
+)
+
+router.get('/*',
+  (req, res) => res.json({ message: `API bad path: ${req.url}`})
 )
 
 // more routes for our API will happen here
