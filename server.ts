@@ -1,5 +1,3 @@
-// server.ts
-
 // BASE SETUP
 // =============================================================================
 
@@ -9,11 +7,14 @@ const API_PATH      :string = '/api'
 
 const LISTEN_PORT : number = 9000
 
+import {ReviewDataService} from './services/review-data.service'
+
 var express = require('express')
 var app = express();
 var path = require('path')
 var bodyParser = require('body-parser')
 
+var reviewDataService = new ReviewDataService()
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -60,7 +61,6 @@ app.use(API_PATH, router);
 app.all('/*',
   ( req, res ) => res.sendFile( path.join(__dirname,DOCUMENT_ROOT,INDEX_HTML) )
 )
-
 
 // START THE SERVER
 // =============================================================================
