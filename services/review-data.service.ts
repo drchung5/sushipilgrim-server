@@ -34,22 +34,24 @@ export class ReviewDataService {
   }
 
   getReviewById( id: number ): Review{
-
     let requestedReview: Review = null
-
     for (let review of this.reviews) {
       if( review.id === id ) {
         requestedReview = review
         break
       }
     }
-
     return requestedReview;
-
   }
 
   getStatesWithReviews(): Array<string>{
-    return null;
+    let reviewStates: Array<string> = new Array<string>()
+    for( let review of this.reviews) {
+      if( reviewStates.indexOf( review.state ) === -1 ) {
+        reviewStates.push(review.state)
+      }
+    }
+    return reviewStates
   }
 
 
