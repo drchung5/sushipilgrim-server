@@ -25,23 +25,30 @@ app.use(bodyParser.json())
 // =============================================================================
 app.use(express.static(path.join( __dirname, DOCUMENT_ROOT)));
 
-
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:9000/api)
-router.get('/',
-  (req, res) => res.json({ message: 'hooray! welcome to our api!' })
-)
+router.get('/', (req, res) => {
 
-router.get('/reviews',
-  (req, res) => res.json({ message: `All Reviews`})
-)
+  })
 
-router.get('/reviews/:state',
-  (req, res) => res.json({ message: `Reviews: ${req.params.state} : ${req.query.count}`})
-)
+// Get ALl reviews
+router.get('/reviews', (req, res) => {
+
+  let reviewData = reviewDataService.getReviews( 'ALL', req.query.count||undefined, req.query.page||undefined );
+  res.send(JSON.stringify(reviewData))
+
+})
+
+
+router.get('/reviews/:state', (req, res) => {
+
+  let reviewData = reviewDataService.getReviews( req.params.state, req.query.count||undefined, req.query.page||undefined );
+  res.send(JSON.stringify(reviewData))
+
+})
 
 router.get('/*',
   (req, res) => res.json({ message: `API bad path: ${req.url}`})

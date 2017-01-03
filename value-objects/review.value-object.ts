@@ -13,7 +13,7 @@ export class Review {
 
     return new Review(
       o['id'],
-      new Date(o['reviewDate']), // TODO review use of Date
+      o['reviewDate'],
       o['name'],
       o['street'],
       o['city'],
@@ -30,7 +30,7 @@ export class Review {
 
   constructor(
     public id: number,
-    public reviewDate: Date, // TODO review use of Date
+    public reviewDate: string,
     public name: string,
     public street: string,
     public city: string,

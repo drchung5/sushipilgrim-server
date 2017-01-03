@@ -6,7 +6,7 @@
 # dependencies
 /node_modules
 
-# this project uses typescript so ignopr javascript
+# this project uses typescript so ignore javascript
 *.js
 
 # IDEs and editors
