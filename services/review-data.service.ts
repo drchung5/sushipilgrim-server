@@ -1,47 +1,88 @@
 import {Review}     from '../value-objects/review.value-object'
 import {ReviewData} from '../value-objects/review-data.value-object'
+import {isNumber} from "util";
 
 export class ReviewDataService {
 
   constructor(){}
 
-  getReviews( state: string, count: number = 5, page: number = 0 ): ReviewData{
+  // This method returns reviews based on the parameters passed in
+  // The selector determines which reviews and the count determines the
+  // number returned. The page indicates which page is requested. All
+  // reviews are wrapped in a ReviewData object
+  //
+  // The selectors work as follows
+  //
+  // 1) If the selector is 'ALL' it returns all reviews (subject to pagination)
+  //
+  // 2) If the selector is a state (e.g. 'IA') it returns all reviews of
+  //    restaurants in that state subject to pagination
+  //
+  // 3) If the selector is a number, the number is treated as an id and it
+  //    returns the review that matches the id. Since there is only one
+  //    review it is not subject to pagination
+  //
 
-    let requestedReviews : Array<Review> = this.reviews
+  getReviews( selector: string, count: number = 5, page: number = 0 ): ReviewData{
 
-    if( state != 'ALL' ) {
-      // filter by state
-      requestedReviews = requestedReviews.filter(review=>review.state===state)
-    }
+    console.log( `getReviews( ${selector}, ${count}, ${page} )` )
 
-    requestedReviews = requestedReviews.sort(function ( review1: Review, review2: Review ) {
-      return (new Date(review2.reviewDate)).getTime() - (new Date(review1.reviewDate)).getTime()
-    })
+    let reviewData : ReviewData = null
 
-    // TODO: do the math here!!!
+    if ( /^\d+$/.test(selector)  ) {
 
-    requestedReviews = requestedReviews.slice(page*count,count)
+      console.log('BY ID')
 
-    let resultsCount = requestedReviews.length
+      // the selector is a number so treat it as a review ID
+      let requestedReview: Review = null
 
-    return new ReviewData(
-      count <= resultsCount ? count : resultsCount,
-      page,
-      (((page*count)+count)<requestedReviews.length),
-      requestedReviews.slice(0,count)
-    )
+      let id = Number(selector)
 
-  }
-
-  getReviewById( id: number ): Review{
-    let requestedReview: Review = null
-    for (let review of this.reviews) {
-      if( review.id === id ) {
-        requestedReview = review
-        break
+      for (let review of this.reviews) {
+        if( review.id === id ) {
+          requestedReview = review
+          break
+        }
       }
+
+      reviewData = new ReviewData (
+        requestedReview ? 1 : 0,  // if the review is null set count to 0
+        0,
+        false,
+        [ requestedReview ]
+      )
+
+    } else {
+
+      // the selector is not a number os treat it as a state
+      // abbreviation or 'ALL'
+
+      let requestedReviews : Array<Review> = this.reviews
+
+      if (selector != 'ALL') {
+        // filter by state
+        requestedReviews = requestedReviews.filter(review => review.state === selector)
+      }
+
+      requestedReviews = requestedReviews.sort(function ( review1: Review, review2: Review ) {
+        return (new Date(review2.reviewDate)).getTime() - (new Date(review1.reviewDate)).getTime()
+      })
+
+      // TODO: do the math here!!!
+
+      let resultsCount = requestedReviews.length
+
+      reviewData = new ReviewData(
+        count <= resultsCount ? count : resultsCount,
+        page,
+        (((page * count) + count) < requestedReviews.length),
+        requestedReviews = requestedReviews.slice(page * count, count)
+      )
     }
-    return requestedReview;
+
+    console.log(`count: ${reviewData.count}  page: ${reviewData.page} hasMorePages: ${reviewData.hasMorePages}`)
+
+    return reviewData
   }
 
   getStatesWithReviews(): Array<string>{
@@ -58,7 +99,7 @@ export class ReviewDataService {
   reviews: Array<Review> = [
 
     new Review(
-      1001,
+      1000,
       "2004-05-16T02:31:03.078Z",
       "Sushi House",
       "123 Edgewood Rd",
@@ -76,7 +117,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1002,
+      1001,
       "2005-09-26T02:31:03.078Z",
       "Maki Sushi ",
       "123 Edgewood Rd",
@@ -94,7 +135,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1003,
+      1002,
       "2002-01-04T02:31:03.078Z",
       "Takanama",
       "123 Edgewood Rd",
@@ -112,7 +153,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1005,
+      1003,
       "2006-07-18T02:31:03.078Z",
       "Oyama",
       "123 Edgewood Rd",
@@ -130,7 +171,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1006,
+      1004,
       "2004-04-29T02:31:03.078Z",
       "NewBo Sushi",
       "123 Edgewood Rd",
@@ -148,7 +189,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1007,
+      1005,
       "2014-05-16T02:31:03.078Z",
       "Wasabi",
       "123 Edgewood Rd",
@@ -166,7 +207,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1008,
+      1006,
       "2006-05-16T02:31:03.078Z",
       "Fuki Sushi",
       "123 Edgewood Rd",
@@ -184,7 +225,7 @@ export class ReviewDataService {
     ),
 
     new Review(
-      1009,
+      1007,
       "2002-03-12T02:31:03.078Z",
       "Joe's Bait Shop",
       "123 Edgewood Rd",

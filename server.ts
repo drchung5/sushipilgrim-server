@@ -46,25 +46,13 @@ router.get('/reviews', (req, res) => {
 })
 
 
-router.get('/reviews/:stateOrId', (req, res) => {
+router.get('/reviews/:selector', (req, res) => {
 
-  console.log( `/api/reviews/${req.params.stateOrId}`)
+  console.log( `/api/reviews/${req.params.selector}`)
 
   // TODO handle bad inputs, MIME-TYPE 404's
-  // determine whether the value is a sring or a number
-  if( isNaN(req.params.stateOrId) ) {
-
-    // state
-    let reviewData = reviewDataService.getReviews(req.params.stateOrId, req.query.count || undefined, req.query.page || undefined);
-    res.send(JSON.stringify(reviewData))
-
-  } else {
-
-    //id
-    let review = reviewDataService.getReviewById(parseInt(req.params.stateOrId))
-    res.send(JSON.stringify(review))
-
-  }
+  let reviewData = reviewDataService.getReviews(req.params.selector, req.query.count || undefined, req.query.page || undefined);
+  res.send(JSON.stringify(reviewData))
 
 })
 

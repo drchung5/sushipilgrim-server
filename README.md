@@ -40,7 +40,7 @@ page (paginated by _count_)
 <br>
 <br>
 This function varies slightly form _RESTful_ conventions.
-If no matching reviews are found it returns HTTP Status code 404
+If no matching reviews are found the count is set to 0
 
 
 ```javascript
@@ -72,9 +72,8 @@ The rest of the function is like _Get All Reviews_
 ```javascript
 http://host:port/api/reviews?id=[id]
 ```
-
-This function returns a review by its unique id. 
-If no matching review is found it returns HTTP Status code 404
+This function is like _Get All Reviews_ it returns the requested review
+by its unique id. 
 
 
 ### Get States with Reviews
