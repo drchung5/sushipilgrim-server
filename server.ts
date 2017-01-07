@@ -6,6 +6,8 @@ const INDEX_HTML    :string = 'index.html'
 const API_PATH      :string = '/api'
 
 const LISTEN_PORT : number = 9000
+const CONTENT_TYPE : string = 'content-type'
+const JSON_MIME : string = 'application/json'
 
 import {ReviewDataService} from './services/review-data.service'
 
@@ -29,18 +31,16 @@ app.use(express.static(path.join( __dirname, DOCUMENT_ROOT)));
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
-// test route to make sure everything is working (accessed at GET http://localhost:9000/api)
-router.get('/', (req, res) => {
-
-  })
-
 // Get ALl reviews
 router.get('/reviews', (req, res) => {
 
-  console.log( '/api/reviews')
+  // TODO handle bad inputs, MIME-TYPE 404's req.query.count||undefined
+  let reviewData = reviewDataService.getReviews(
+    'ALL',
+    req.query.count||undefined,
+    req.query.page||undefined );
 
-  // TODO handle bad inputs, MIME-TYPE 404's
-  let reviewData = reviewDataService.getReviews( 'ALL', req.query.count||undefined, req.query.page||undefined );
+  res.setHeader(CONTENT_TYPE, JSON_MIME)
   res.send(JSON.stringify(reviewData))
 
 })
@@ -48,10 +48,15 @@ router.get('/reviews', (req, res) => {
 
 router.get('/reviews/:selector', (req, res) => {
 
-  console.log( `/api/reviews/${req.params.selector}`)
+  console.log( `/api/reviews/${req.params.selector} count:${req.query.count} page:${req.query.page}`)
 
   // TODO handle bad inputs, MIME-TYPE 404's
-  let reviewData = reviewDataService.getReviews(req.params.selector, req.query.count || undefined, req.query.page || undefined);
+  let reviewData = reviewDataService.getReviews(
+    req.params.selector,
+    req.query.count || undefined,
+    req.query.page || undefined);
+
+  res.setHeader(CONTENT_TYPE, JSON_MIME)
   res.send(JSON.stringify(reviewData))
 
 })
@@ -60,6 +65,7 @@ router.get('/statesWithReviews', (req, res) => {
 
   // TODO handle bad inputs, MIME-TYPE 404's
   let statesWithReviews: Array<string> = reviewDataService.getStatesWithReviews()
+  res.setHeader(CONTENT_TYPE, JSON_MIME)
   res.send(JSON.stringify(statesWithReviews))
 
 })

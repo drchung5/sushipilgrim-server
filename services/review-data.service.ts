@@ -1,6 +1,5 @@
 import {Review}     from '../value-objects/review.value-object'
 import {ReviewData} from '../value-objects/review-data.value-object'
-import {isNumber} from "util";
 
 export class ReviewDataService {
 
@@ -25,7 +24,7 @@ export class ReviewDataService {
 
   getReviews( selector: string, count: number = 5, page: number = 0 ): ReviewData{
 
-    console.log( `getReviews( ${selector}, ${count}, ${page} )` )
+    console.log( `ReviewDataService getReviews( ${selector}, count:${count}, page:${page} )` )
 
     let reviewData : ReviewData = null
 
@@ -57,26 +56,39 @@ export class ReviewDataService {
       // the selector is not a number os treat it as a state
       // abbreviation or 'ALL'
 
-      let requestedReviews : Array<Review> = this.reviews
+      let filteredReviews : Array<Review> = this.reviews
 
       if (selector != 'ALL') {
         // filter by state
-        requestedReviews = requestedReviews.filter(review => review.state === selector)
+        filteredReviews = filteredReviews.filter(review => review.state === selector)
       }
 
-      requestedReviews = requestedReviews.sort(function ( review1: Review, review2: Review ) {
+      // sort by date descending (most recent first)
+      filteredReviews = filteredReviews.sort(function ( review1: Review, review2: Review ) {
         return (new Date(review2.reviewDate)).getTime() - (new Date(review1.reviewDate)).getTime()
       })
 
       // TODO: do the math here!!!
 
-      let resultsCount = requestedReviews.length
+      let beginSlice: number = (page==0)?0:(page*count)
+
+      // TODO at this point count has a type of 'string' WHY???
+      //      this is a hack to coerce it back into a number
+      count = Number(count).valueOf()
+
+      console.log(`beginSlice:       ${typeof beginSlice}` )
+      console.log(`count:            ${typeof count}` )
+      console.log(`beginSlice+count: ${typeof (beginSlice+count)}` )
+
+      let requestedReviews = filteredReviews.slice(beginSlice, beginSlice+count)
+
+      console.log(`slice(${beginSlice},${beginSlice+count})`)
 
       reviewData = new ReviewData(
-        count <= resultsCount ? count : resultsCount,
+        requestedReviews.length,
         page,
-        (((page * count) + count) < requestedReviews.length),
-        requestedReviews = requestedReviews.slice(page * count, count)
+        (((page * count) + count) < filteredReviews.length),
+        requestedReviews
       )
     }
 
@@ -240,6 +252,108 @@ export class ReviewDataService {
         "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
       ],
       1
+    ),
+    new Review(
+      1008,
+      "2009-11-12T02:31:03.078Z",
+      "Bucky's",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      1
+    ),
+    new Review(
+      1009,
+      "1999-12-12T02:31:03.078Z",
+      "Mendota",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      1
+    ),
+    new Review(
+      1010,
+      "2015-04-12T02:31:03.078Z",
+      "UW Sushi",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      2
+    ),
+    new Review(
+      1011,
+      "2000-07-12T02:31:03.078Z",
+      "Polka Sushi",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      3
+    ),
+    new Review(
+      1012,
+      "2008-02-12T02:31:03.078Z",
+      "Packer Sushi",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      5
+    ),
+    new Review(
+      1013,
+      "2010-01-12T02:31:03.078Z",
+      "Union Sushi",
+      "123 Edgewood Rd",
+      "Madison",
+      "WI",
+      "52404",
+      "3197778888",
+      "http://www.sushihouse.com",
+      "http://www.map.com",
+      [
+        "Lorem <em>ipsum</em> dolor sit amet, <b>consectetur</b> adipiscing <i>elit</i>. Pellentesque eu nibh commodo, vestibulum ligula eget, fermentum nisl. Aliquam molestie porta justo, eget congue ipsum ultricies vitae. Integer et nulla vel tortor elementum vestibulum. Aenean porta eros vitae dictum elementum. Mauris laoreet metus tellus, sit amet feugiat justo placerat vel. Nullam id rutrum nisl. Maecenas sodales metus tortor, quis accumsan tellus ultricies ut.",
+        "Aliquam pulvinar lacus lacus, in euismod erat auctor id. Aenean eu laoreet lectus. Nam nibh leo, commodo quis risus id, convallis vulputate lectus. Etiam a enim in lorem tincidunt facilisis faucibus sed nunc. Fusce maximus aliquam turpis, sed pharetra quam aliquam non. Vestibulum viverra in nunc sed efficitur. Vestibulum est leo, porta ac dignissim quis, tincidunt a velit. Morbi at maximus odio. Suspendisse tincidunt orci eu eleifend pharetra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed sed est id tellus ultrices dignissim vitae sed metus. Vestibulum at dolor vestibulum, rutrum arcu a, egestas odio.",
+      ],
+      5
     )
   ]
 
