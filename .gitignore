@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # static content directory
-/document_root
+#/document_root
 
 # dependencies
 /node_modules
