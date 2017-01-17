@@ -7,7 +7,8 @@
 /node_modules
 
 # this project uses typescript so ignore javascript
-*.js
+/services/*.js
+/value-objects/*.js
 
 # IDEs and editors
 /.idea
