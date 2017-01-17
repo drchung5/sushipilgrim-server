@@ -66,6 +66,7 @@ h2, h3 {
 
 body {
   padding: 1em;
+  min-width: 350px;
 }
 
 body > footer {
