@@ -5,7 +5,7 @@ const DOCUMENT_ROOT :string = 'document_root'
 const INDEX_HTML    :string = 'index.html'
 const API_PATH      :string = '/api'
 
-const LISTEN_PORT : number = 9000
+const LISTEN_PORT : number = 80
 const CONTENT_TYPE : string = 'content-type'
 const JSON_MIME : string = 'application/json'
 
