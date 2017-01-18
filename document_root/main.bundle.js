@@ -5,7 +5,7 @@ webpackJsonp([0,3],{
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(276);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__value_objects_review_review_value_object__ = __webpack_require__(300);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__(637);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__);
@@ -173,7 +173,6 @@ var MobileDetectionService = (function () {
     function MobileDetectionService() {
         this.isMobile = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
         this.isMobile$ = this.isMobile.asObservable();
-        console.log('MobileDetectionService: constructor');
     }
     MobileDetectionService.prototype.setMobile = function (isMobile) {
         this.isMobile.next(isMobile);
@@ -188,14 +187,54 @@ var MobileDetectionService = (function () {
 
 /***/ },
 
-/***/ 298:
+/***/ 190:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
+/* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return StateSelectionService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+// This service is used by the review-list and
+// state-list components to indicate which
+// reviews the user has selected
+var StateSelectionService = (function () {
+    function StateSelectionService() {
+        this.selected = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
+        this.selected$ = this.selected.asObservable();
+    }
+    StateSelectionService.prototype.setState = function (selected) {
+        this.selected.next(selected);
+    };
+    StateSelectionService = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Injectable */])(), 
+        __metadata('design:paramtypes', [])
+    ], StateSelectionService);
+    return StateSelectionService;
+}());
+//# sourceMappingURL=/Users/dchung/experiments/angular/sushipilgrim-cli/src/state-selection.service.js.map
+
+/***/ },
+
+/***/ 299:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__ = __webpack_require__(190);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_mobile_detection_mobile_detection_service__ = __webpack_require__(189);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return ReviewListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -234,17 +273,15 @@ var ReviewListComponent = (function () {
         var _this = this;
         // since ngOnInit is only called once, subscribe to changes in the URL parameter
         this.activatedRoute.params.subscribe(function (params) {
-            console.log("params - state: " + params['state']);
             _this.selectedState = params['state'];
             if (_this.selectedState === undefined) {
                 _this.selectedState = 'ALL';
             }
-            _this.stateSelectionService.setState(_this.selectedState);
+            // this.stateSelectionService.setState(this.selectedState)
             _this.mobileDetectionService.setMobile(_this.isMobile);
             _this.doNav();
         });
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
-            console.log("queryParams - page: " + queryParams['page'] + "  count: " + queryParams['count']);
             var page = queryParams['page'] || 0;
             var count = queryParams['count'];
             if (!count) {
@@ -260,6 +297,7 @@ var ReviewListComponent = (function () {
         if (page === void 0) { page = 0; }
         if (count === void 0) { count = this.REVIEWS_PER_PAGE; }
         this.showMobileMenu = false;
+        this.stateSelectionService.setState(this.selectedState);
         this.reviewDataService.getReviews(this.selectedState, page, count).then(function (data) {
             _this.reviews = data.reviews;
             // TODO this is a hack!!! I do not understant why the typeof data.page is a string
@@ -315,7 +353,7 @@ var ReviewListComponent = (function () {
             moduleId: "module.id",
             template: __webpack_require__(629),
             styles: [__webpack_require__(625)],
-            providers: [__WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */], __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]]
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__services_mobile_detection_mobile_detection_service__["a" /* MobileDetectionService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_4__services_mobile_detection_mobile_detection_service__["a" /* MobileDetectionService */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _e) || Object])
     ], ReviewListComponent);
@@ -323,46 +361,6 @@ var ReviewListComponent = (function () {
     var _a, _b, _c, _d, _e;
 }());
 //# sourceMappingURL=/Users/dchung/experiments/angular/sushipilgrim-cli/src/review-list.component.js.map
-
-/***/ },
-
-/***/ 299:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__(74);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
-/* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return StateSelectionService; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-// This service is used by the review-list and
-// state-list components to indicate which
-// reviews the user has selected
-var StateSelectionService = (function () {
-    function StateSelectionService() {
-        this.selected = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
-        this.selected$ = this.selected.asObservable();
-    }
-    StateSelectionService.prototype.setState = function (selected) {
-        this.selected.next(selected);
-    };
-    StateSelectionService = __decorate([
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Injectable */])(), 
-        __metadata('design:paramtypes', [])
-    ], StateSelectionService);
-    return StateSelectionService;
-}());
-//# sourceMappingURL=/Users/dchung/experiments/angular/sushipilgrim-cli/src/state-selection.service.js.map
 
 /***/ },
 
@@ -443,14 +441,15 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(276);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_routes__ = __webpack_require__(468);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_main_main_page_component__ = __webpack_require__(471);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_state_list_state_list_component__ = __webpack_require__(470);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_review_review_component__ = __webpack_require__(469);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_review_list_review_list_component__ = __webpack_require__(298);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_review_list_review_list_component__ = __webpack_require__(299);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_review_data_review_data_service__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_mobile_detection_mobile_detection_service__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_state_selection_state_selection_service__ = __webpack_require__(190);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__services_mobile_detection_mobile_detection_service__ = __webpack_require__(189);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -461,6 +460,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -487,7 +487,7 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_6__components_review_review_component__["a" /* ReviewComponent */],
                 __WEBPACK_IMPORTED_MODULE_7__components_review_list_review_list_component__["a" /* ReviewListComponent */]
             ],
-            providers: [__WEBPACK_IMPORTED_MODULE_8__services_review_data_review_data_service__["a" /* ReviewDataService */], __WEBPACK_IMPORTED_MODULE_9__services_mobile_detection_mobile_detection_service__["a" /* MobileDetectionService */]],
+            providers: [__WEBPACK_IMPORTED_MODULE_8__services_review_data_review_data_service__["a" /* ReviewDataService */], __WEBPACK_IMPORTED_MODULE_10__services_mobile_detection_mobile_detection_service__["a" /* MobileDetectionService */], __WEBPACK_IMPORTED_MODULE_9__services_state_selection_state_selection_service__["a" /* StateSelectionService */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_4__pages_main_main_page_component__["a" /* MainPageComponent */]]
         }), 
         __metadata('design:paramtypes', [])
@@ -504,7 +504,7 @@ var AppModule = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_review_list_review_list_component__ = __webpack_require__(298);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_review_list_review_list_component__ = __webpack_require__(299);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return SushipilgrimRouterModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -627,7 +627,7 @@ var ReviewComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__ = __webpack_require__(190);
 /* harmony export (binding) */ __webpack_require__.d(exports, "a", function() { return StateListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -718,7 +718,6 @@ var StateListComponent = (function () {
     }
     StateListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        console.log("State: " + this.selectedState);
         this.reviewDataService.getStatesWithReviews().then(function (statesWithReviews) {
             _this.statesWithReviews = statesWithReviews;
             // since 'All Reviews' is not a state we
@@ -749,7 +748,7 @@ var StateListComponent = (function () {
             moduleId: "module.id",
             template: __webpack_require__(631),
             styles: [__webpack_require__(627)],
-            providers: [__WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */], __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]]
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__services_review_data_review_data_service__["a" /* ReviewDataService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__services_state_selection_state_selection_service__["a" /* StateSelectionService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _c) || Object])
     ], StateListComponent);
@@ -782,7 +781,6 @@ var MainPageComponent = (function () {
     function MainPageComponent(mobileDetectionService) {
         var _this = this;
         this.mobileDetectionService = mobileDetectionService;
-        console.log('PageMainCompenent:constructor');
         // isMobile$ is an Observable so the subscribe
         // function watches for changes
         this.mobileDetectionService.isMobile$.subscribe(function (isMobile) {
@@ -888,35 +886,35 @@ module.exports = "nav.prev {\n  float: left;\n}\n\nnav.next {\n  float: right;\n
 /***/ 626:
 /***/ function(module, exports) {
 
-module.exports = "article {\n  padding: 0 1em 0 1em;\n}\n\nsection p:first-child {\n  margin-top: 1em;\n}\n\n.continue {\n  color: red;\n  font-size: smaller;\n  cursor: pointer;\n}\n\n.continue:hover {\n  font-style: italic;\n}\n\n.continue > span {\n  float: right;\n}\n\nfooter {\n  margin-top: 0.5em;\n  padding: .5em;\n  border: 1px black solid;\n  background-color: lightgray;\n  font-style: italic;\n  margin-bottom: 1.5em;\n}\n\n.clear {\n  clear: both;\n}\n\n.rice-bowls {\n  display: inline-block;\n  float: right;\n}\n\n.restaurant-name {\n  font-weight: 900;\n  font-size: 1.2em;\n}\n\n.restaurant-name:hover {\n  font-style: italic;\n  cursor: pointer;\n  text-decoration: underline;\n}\n\n.sushiFadeLastLine {\n  height: 2.5em;\n  overflow: hidden;\n}\n\n.rice-bowl {\n  width: 25px;\n  padding-bottom: .3em;\n}\n\n.rice-bowl-detail {\n  display: none;\n}\n\n/* Extra small devices (phones, less than 768px) */\n/* No media query since this is the default in Bootstrap */\n\n/* Small devices (tablets, 768px and up) */\n@media (min-width: 768px) {\n\n  .sushiFadeLastLine {\n    height: 4em;\n    overflow: hidden;\n  }\n\n  .rice-bowl-detail {\n    display: inline-block;\n  }\n\n  .rice-bowl {\n    width: 30px;\n    padding-bottom: .1em;\n  }\n}\n"
+module.exports = "article {\n  padding: 0 1em 0 1em;\n}\n\nsection p:first-child {\n  margin-top: 1em;\n}\n\n.continue {\n  color: red;\n  font-size: smaller;\n  cursor: pointer;\n  float: right;\n  border: black 1px solid;\n  border-radius: .75em;\n  margin-bottom: .5em;\n  padding: .2em .4em;\n}\n\n.continue:hover {\n  font-style: italic;\n}\n\n.continue > span {\n  /*float: right;*/\n}\n\n.sushi-hidden {\n  display: none;\n}\n\nfooter {\n  margin-top: 0.5em;\n  padding: .5em;\n  border: 1px black solid;\n  background-color: lightgray;\n  font-style: italic;\n  margin-bottom: 1.5em;\n}\n\n.clear {\n  clear: both;\n}\n\n.rice-bowls {\n  display: inline-block;\n  float: right;\n}\n\n.restaurant-name {\n  font-weight: 900;\n  font-size: 1.2em;\n}\n\n.restaurant-name:hover {\n  font-style: italic;\n  cursor: pointer;\n  text-decoration: underline;\n}\n\n.sushiFadeLastLine {\n  height: 2.5em;\n  overflow: hidden;\n}\n\n.rice-bowl {\n  width: 25px;\n  padding-bottom: .3em;\n}\n\n.rice-bowl-detail {\n  display: none;\n}\n\n\n/* Extra small devices (phones, less than 768px) */\n/* No media query since this is the default in Bootstrap */\n\n/* Small devices (tablets, 768px and up) */\n@media (min-width: 768px) {\n\n  .sushiFadeLastLine {\n    height: 4em;\n    overflow: hidden;\n  }\n\n  .rice-bowl-detail {\n    display: inline-block;\n  }\n\n  .rice-bowl {\n    width: 30px;\n    padding-bottom: .1em;\n  }\n\n  .sushi-hidden {\n    display: inline-block;\n  }\n\n  .continue {\n    border: none;\n    margin-bottom: 0px;\n    padding: 0px;\n  }\n}\n"
 
 /***/ },
 
 /***/ 627:
 /***/ function(module, exports) {
 
-module.exports = "nav {\n  font-size: 0.9em;\n  padding-left: 0em;\n  padding-top: 0.5em;\n  margin-left: 0em;\n  border-top: lightgray solid 1px;\n}\nul {\n  margin:0;\n}\nli {\n  list-style: none;\n}\n.selected {\n  display: inline-block;\n  width: 0.9em;\n}\n\n.link {\n  display: inline-block;\n  padding-left: 0em;\n  margin-left: -0.2em;\n  color: blue;\n}\n\n.link:hover {\n  font-style: italic;\n  color: blue;\n  cursor: pointer;\n  text-decoration: underline;\n}"
+module.exports = "nav {\n  font-size: 0.9em;\n  padding-left: 0em;\n  padding-top: 0.5em;\n  margin-left: 0em;\n  border-top: lightgray solid 1px;\n}\nul {\n  margin:0;\n}\n\nli {\n  list-style: none;\n  border: black 1px solid;\n  padding: .5em 0 .5em 0.5em;\n}\n\n\n.selected {\n  display: inline-block;\n  width: 0.9em;\n}\n\n.link {\n  display: inline-block;\n  padding-left: 0em;\n  margin-left: -0.2em;\n  color: blue;\n}\n\n.link:hover {\n  font-style: italic;\n  color: blue;\n  cursor: pointer;\n  text-decoration: underline;\n}\n\n@media (min-width: 768px) {\n\n  li {\n    border: none;\n    padding: 0;\n  }\n\n}"
 
 /***/ },
 
 /***/ 628:
 /***/ function(module, exports) {
 
-module.exports = "header {\n  margin-bottom: 0.5em;\n}\n\n\n/*section {*/\n  /*width: auto;*/\n  /*overflow: hidden;*/\n  /*padding-right: 1em;*/\n/*}*/\n\naside {\n  margin-left: .7em;\n  float: right;\n  width: 150px;\n}\n\nsection {\n  width: auto;\n  overflow: hidden;\n}\n\n\n@media (min-width: 768px) {\n\n}"
+module.exports = "header {\n  margin-bottom: 0.5em;\n}\n\naside {\n  margin-left: .7em;\n  float: right;\n  width: 150px;\n  margin-bottom: .5em;\n}\n\nsection {\n  width: auto;\n  overflow: hidden;\n}\n\n@media (min-width: 768px) {\n\n}"
 
 /***/ },
 
 /***/ 629:
 /***/ function(module, exports) {
 
-module.exports = "<header>\n  <div (window:resize)=\"onResize($event)\" class=\"sushi-breadcrumb\"\n       *ngFor=\"let pathSegment of path; let i = index\"\n       (click)=\"doBreadcrumbNav(i)\">{{pathSegment}}&nbsp;</div>\n  <img id=\"hamburger\" (click)=\"onHamburger()\" src=\"../../../images/hamburger.png\"/>\n</header>\n\n<template [ngIf]=\"!isMobile || !showMobileMenu\">\n  <review *ngFor=\"let review of reviews\" [review]=\"review\" [enableAccordian]=\"enableAccordian\"></review>\n</template>\n\n<state-list *ngIf=\"isMobile && showMobileMenu\"></state-list>\n\n<footer *ngIf=\"!showMobileMenu && (currentPage != 0 || hasMorePages)\">\n  <nav *ngIf=\"currentPage != 0\" class=\"prev\">\n    <a href=\"#\" [routerLink]=\"['/'+selectedState]\" [queryParams]={page:currentPage-1}>&laquo; Prev Page</a>\n  </nav>\n  <nav *ngIf=\"hasMorePages\" class=\"next\">\n    <a href=\"#\" [routerLink]=\"['/'+selectedState]\" [queryParams]={page:currentPage+1}>Next Page &raquo;</a>\n  </nav>\n</footer>"
+module.exports = "<header>\n  <div (window:resize)=\"onResize($event)\" class=\"sushi-breadcrumb\"\n       *ngFor=\"let pathSegment of path; let i = index\"\n       (click)=\"doBreadcrumbNav(i)\">{{pathSegment}}&nbsp;</div>\n  <img id=\"hamburger\" (click)=\"onHamburger()\" src=\"../../../images/hamburger.png\"/>\n</header>\n\n<review\n      [hidden]=\"isMobile && showMobileMenu\"\n      *ngFor=\"let review of reviews\"\n      [review]=\"review\"\n      [enableAccordian]=\"enableAccordian\"></review>\n\n<state-list [hidden]=\"!isMobile || !showMobileMenu\"></state-list>\n\n<footer *ngIf=\"!showMobileMenu && (currentPage != 0 || hasMorePages)\">\n  <nav *ngIf=\"currentPage != 0\" class=\"prev\">\n    <a href=\"#\" [routerLink]=\"['/'+selectedState]\" [queryParams]={page:currentPage-1}>&laquo; Prev Page</a>\n  </nav>\n  <nav *ngIf=\"hasMorePages\" class=\"next\">\n    <a href=\"#\" [routerLink]=\"['/'+selectedState]\" [queryParams]={page:currentPage+1}>Next Page &raquo;</a>\n  </nav>\n</footer>"
 
 /***/ },
 
 /***/ 630:
 /***/ function(module, exports) {
 
-module.exports = "<article>\n\n  <header>\n    <span class=\"restaurant-name\" (click)=\"showThisReview()\">{{review.name}}</span><br>\n    {{review.street}}<br>\n    {{review.city}}, {{review.state}}&nbsp;&nbsp;{{review.zip}}\n  </header>\n\n  <section>\n    <template ngFor let-paragraph [ngForOf]=\"review.text\" let-i=\"index\">\n\n      <!--innerHTML syntax used for binding to support-->\n      <!--rendering of HTML tags in bound text-->\n      <!-- TODO: research what tags can be included -->\n      <p *ngIf=\"i === 0 || expanded || !enableAccordian\"\n         [innerHTML]=\"paragraph\"\n         [ngClass]=\"{sushiFadeLastLine:i === 0 && !expanded && enableAccordian}\">\n      </p>\n\n      <template [ngIf]=\"i === 0 && !expanded && enableAccordian\">\n        <div class=\"continue\" (click)=\"more()\">\n          <span>{{review.name}} full review &raquo;</span>\n        </div>\n        <hr class=\"clear\">\n      </template>\n\n      <div *ngIf=\"i === (review.text.length-1) && expanded && enableAccordian\" class=\"continue\" (click)=\"more()\">\n        <span>&laquo; Minimize the review</span>\n      </div>\n\n    </template>\n  </section>\n\n  <!--Only display footer if review is expanded-->\n  <footer class=\"clear\" *ngIf=\"expanded || !enableAccordian\">\n    {{review.name}}<span class=\"rice-bowl-detail\"> &mdash; {{review.rating}} rice bowl<span *ngIf=\"review.rating > 1\">s</span></span>\n      <div class=\"rice-bowls\">\n        <img *ngFor=\"let bowl of riceBowls; let i = index\" class=\"rice-bowl\" [src]=\"bowl?colorBowl:greyBowl\"/>\n      </div>\n  </footer>\n\n</article>"
+module.exports = "<article>\n\n  <header>\n    <span class=\"restaurant-name\" (click)=\"showThisReview()\">{{review.name}}</span><br>\n    {{review.street}}<br>\n    {{review.city}}, {{review.state}}&nbsp;&nbsp;{{review.zip}}\n  </header>\n\n  <section>\n    <template ngFor let-paragraph [ngForOf]=\"review.text\" let-i=\"index\">\n\n      <!--innerHTML syntax used for binding to support-->\n      <!--rendering of HTML tags in bound text-->\n      <!-- TODO: research what tags can be included -->\n      <p *ngIf=\"i === 0 || expanded || !enableAccordian\"\n         [innerHTML]=\"paragraph\"\n         [ngClass]=\"{sushiFadeLastLine:i === 0 && !expanded && enableAccordian}\">\n      </p>\n\n      <template [ngIf]=\"i === 0 && !expanded && enableAccordian\">\n        <div class=\"continue\" (click)=\"more()\">\n          <span class=\"sushi-hidden\">{{review.name}}&nbsp;</span><span>Full Review &raquo;</span>\n        </div>\n        <hr class=\"clear\">\n      </template>\n\n      <div *ngIf=\"i === (review.text.length-1) && expanded && enableAccordian\" class=\"continue\" (click)=\"more()\">\n        <span>&laquo; Minimize Review</span>\n      </div>\n\n    </template>\n  </section>\n\n  <!--Only display footer if review is expanded-->\n  <footer class=\"clear\" *ngIf=\"expanded || !enableAccordian\">\n    {{review.name}}<span class=\"rice-bowl-detail\"> &mdash; {{review.rating}} rice bowl<span *ngIf=\"review.rating > 1\">s</span></span>\n      <div class=\"rice-bowls\">\n        <img *ngFor=\"let bowl of riceBowls; let i = index\" class=\"rice-bowl\" [src]=\"bowl?colorBowl:greyBowl\"/>\n      </div>\n  </footer>\n\n</article>"
 
 /***/ },
 
@@ -930,7 +928,7 @@ module.exports = "<nav>\n\n  <ul *ngFor=\"let state of states\">\n\n    <li *ngI
 /***/ 632:
 /***/ function(module, exports) {
 
-module.exports = "<aside id=\"state-list-container\" *ngIf=\"!isMobile\">\n  <header>Reviews</header>\n  <state-list></state-list>\n</aside>\n\n<section>\n  <router-outlet></router-outlet>\n</section>"
+module.exports = "<aside id=\"state-list-container\" [hidden]=\"isMobile\">\n  <header>Reviews</header>\n  <state-list></state-list>\n</aside>\n\n<section>\n  <router-outlet></router-outlet>\n</section>"
 
 /***/ },
 
